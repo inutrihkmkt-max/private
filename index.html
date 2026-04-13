@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HK Beauty AI Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#f0f0ff;font-family:system-ui,sans-serif}
+.app{background:#0a0a0f;color:#f0f0ff;min-height:100vh}
+.header{background:#0d0d1a;border-bottom:1px solid #2d1b6b;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:#7c3aed;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;font-weight:700}
+.logo-text{font-size:15px;font-weight:500}.logo-sub{font-size:11px;color:#a855f7}
+.hbadge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+.bp{background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3)}
+.bb{background:rgba(34,211,238,.1);color:#22d3ee;border:1px solid rgba(34,211,238,.25)}
+.nav{background:#0d0d1a;border-bottom:1px solid #1a1a2e;padding:0 20px;display:flex;overflow-x:auto}
+.nb{padding:11px 14px;font-size:12px;border:none;background:transparent;cursor:pointer;color:#9090b0;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.nb:hover{color:#f0f0ff}.nb.active{color:#a855f7;border-bottom-color:#a855f7}
+.content{padding:18px}
+.stitle{font-size:16px;font-weight:500;color:#f0f0ff;margin-bottom:3px}
+.ssub{font-size:12px;color:#9090b0;margin-bottom:16px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:16px}
+.sc{background:#111118;border:1px solid #1e1e2e;border-radius:10px;padding:13px}
+.slabel{font-size:11px;color:#9090b0;margin-bottom:4px}.sval{font-size:22px;font-weight:500}
+.schange{font-size:11px;margin-top:3px}.up{color:#10b981}
+.card{background:#111118;border:1px solid #1e1e2e;border-radius:12px;padding:15px;margin-bottom:14px}
+.ctitle{font-size:11px;font-weight:500;color:#9090b0;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.idk{background:#0d0d1a;border:1px solid #2a2a40;border-radius:8px;padding:9px 13px;color:#f0f0ff;font-size:13px;outline:none;width:100%}
+.idk:focus{border-color:#a855f7}.idk::placeholder{color:#606080}
+textarea.idk{resize:vertical;line-height:1.6;min-height:110px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s}
+.btp{background:#7c3aed;color:#fff}.btp:hover{background:#9333ea}
+.btp:disabled{background:#3a2a5a;color:#9090b0;cursor:not-allowed}
+.btg{background:#059669;color:#fff}.btg:hover{background:#10b981}
+.bto{background:transparent;border:1px solid #3a3a5c;color:#9090b0;font-size:12px;padding:6px 12px}.bto:hover{border-color:#a855f7;color:#a855f7}
+.btsm{padding:6px 11px;font-size:12px}
+.pb{background:#1a1a2e;border-radius:6px;height:7px;overflow:hidden;margin-top:5px}
+.pf{height:100%;border-radius:6px;transition:width .8s ease}
+.pp{background:#7c3aed}.pb2{background:#0891b2}.pg{background:#059669}
+.chip{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;margin:3px;cursor:pointer}
+.cp{background:rgba(168,85,247,.1);color:#a855f7;border:1px solid rgba(168,85,247,.2)}
+.cb{background:rgba(34,211,238,.08);color:#22d3ee;border:1px solid rgba(34,211,238,.2)}
+.cg{background:rgba(16,185,129,.08);color:#10b981;border:1px solid rgba(16,185,129,.2)}
+.cpk{background:rgba(192,38,211,.1);color:#e879f9;border:1px solid rgba(192,38,211,.2)}
+.dbtn{padding:5px 12px;border-radius:20px;border:1px solid #2a2a40;background:transparent;color:#9090b0;font-size:12px;cursor:pointer;transition:all .15s}
+.dbtn.active{background:rgba(168,85,247,.15);border-color:#a855f7;color:#a855f7}
+.tc{display:none}.tc.active{display:block}
+.krow{display:grid;grid-template-columns:1fr auto auto auto;gap:0;border-bottom:1px solid #1a1a2e;align-items:center;padding:7px 0;font-size:12px}
+.krow:last-child{border-bottom:none}
+.ktag{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+.diff-high{background:rgba(16,185,129,.1);color:#10b981}
+.diff-med{background:rgba(245,158,11,.1);color:#f59e0b}
+.diff-low{background:rgba(168,85,247,.1);color:#a855f7}
+.lbar{height:3px;background:linear-gradient(90deg,transparent,#7c3aed,#22d3ee,transparent);animation:slide 1.5s ease-in-out infinite;border-radius:2px;overflow:hidden}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.hidden{display:none!important}
+.vol-card{background:#0d0d1a;border-radius:8px;padding:12px;text-align:center}
+.vol-num{font-size:20px;font-weight:500;margin-bottom:2px}.vol-label{font-size:11px;color:#9090b0}
+.trend-bar{display:flex;align-items:flex-end;gap:3px;height:48px}
+.tb{border-radius:2px 2px 0 0;flex:1;min-width:10px}
+.rkw-row{display:flex;justify-content:space-between;align-items:center;background:#0d0d1a;border-radius:6px;padding:8px 11px;font-size:12px;cursor:pointer;margin-bottom:5px}
+.result-section{background:#0d0d1a;border-radius:10px;margin-bottom:10px;overflow:hidden;border:1px solid #1e1e2e}
+.rs-header{padding:11px 15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;border-bottom:1px solid #1a1a2e;user-select:none}
+.rs-title{font-size:13px;font-weight:500;color:#f0f0ff}
+.rs-body{padding:13px 15px}
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.ba-box{border-radius:8px;padding:11px;font-size:12px;line-height:1.7}
+.ba-before{background:#1a0a0a;border:1px solid rgba(239,68,68,.25)}
+.ba-after{background:#0a1a0f;border:1px solid rgba(16,185,129,.25)}
+.ba-label{font-size:10px;font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.ba-before .ba-label{color:#ef4444}.ba-after .ba-label{color:#10b981}
+.ba-before .ba-text{color:#fca5a5;white-space:pre-wrap;word-break:break-word}
+.ba-after .ba-text{color:#86efac;white-space:pre-wrap;word-break:break-word}
+.reason-box{background:#0a0a18;border:1px solid #2a1f5a;border-radius:6px;padding:10px;font-size:12px;color:#9090b0;line-height:1.7}
+.reason-box strong{color:#a855f7;font-weight:500}
+.serp-preview{background:#fff;border-radius:8px;padding:13px;font-family:Arial,sans-serif;margin-bottom:8px}
+.serp-url{font-size:11px;color:#5f6368;margin-bottom:2px;word-break:break-all}
+.serp-title{font-size:16px;color:#1a0dab;margin-bottom:3px;font-weight:400;line-height:1.3}
+.serp-desc{font-size:13px;color:#4d5156;line-height:1.5}
+.copy-btn{font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #2a2a40;background:transparent;color:#9090b0;cursor:pointer}
+.copy-btn:hover{border-color:#10b981;color:#10b981}
+.tag-red{background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);font-size:10px;padding:2px 7px;border-radius:10px}
+.tag-green-sm{background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.2);font-size:10px;padding:2px 7px;border-radius:10px}
+.url-box{background:#0d1a0d;border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:12px;margin-bottom:10px}
+.url-old{color:#fca5a5;text-decoration:line-through;margin-bottom:5px;word-break:break-all;font-size:12px}
+.url-new{color:#86efac;font-weight:500;word-break:break-all;font-size:13px}
+.tab-row{display:flex;border:1px solid #2a2a40;border-radius:8px;overflow:hidden;margin-bottom:12px}
+.tab-opt{flex:1;padding:9px;text-align:center;font-size:12px;cursor:pointer;background:#0d0d1a;color:#9090b0;border:none;transition:all .15s}
+.tab-opt.active{background:#7c3aed;color:#fff}
+.notice{background:rgba(168,85,247,.05);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:11px;font-size:12px;color:#9090b0;line-height:1.7;margin-bottom:12px}
+.score-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:9px;margin-bottom:14px}
+.score-card{background:#0d0d1a;border-radius:8px;padding:11px;text-align:center}
+.score-num{font-size:20px;font-weight:500;margin-bottom:2px}.score-label{font-size:11px;color:#9090b0}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:4px}
+.feature-card{background:#0d0d1a;border:1px solid rgba(168,85,247,.2);border-radius:10px;padding:11px 13px;display:flex;align-items:flex-start;gap:10px}
+.fc-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.fc-title{font-size:12px;font-weight:500;color:#f0f0ff;margin-bottom:2px}
+.fc-kw{font-size:10px;color:#a855f7;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:1px 7px;display:inline-block}
+.intro-visual{background:#0a0a18;border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:13px;font-size:13px;line-height:1.9;color:#d4d4f0}
+.pain-tag{background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.25);border-radius:4px;padding:0 5px;font-size:11px;font-weight:500}
+.benefit-tag{background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.2);border-radius:4px;padding:0 5px;font-size:11px;font-weight:500}
+.cta-tag{background:rgba(168,85,247,.12);color:#a855f7;border:1px solid rgba(168,85,247,.25);border-radius:4px;padding:0 5px;font-size:11px;font-weight:500}
+.geo-qa-cards{display:flex;flex-direction:column;gap:8px}
+.geo-qa-card{background:#0d0d1a;border-radius:10px;overflow:hidden}
+.geo-qa-q{background:rgba(232,121,249,.08);border-left:3px solid #e879f9;padding:9px 13px;font-size:12px;color:#f0d4ff;display:flex;align-items:flex-start;gap:8px}
+.q-badge{background:#c026d3;color:#fff;font-size:10px;font-weight:700;border-radius:4px;padding:1px 6px;flex-shrink:0;margin-top:1px}
+.geo-qa-a{padding:9px 13px;font-size:12px;color:#9090b0;line-height:1.7;border-left:3px solid #2a2a40;display:flex;align-items:flex-start;gap:8px}
+.a-badge{background:#3a2a5a;color:#a855f7;font-size:10px;font-weight:700;border-radius:4px;padding:1px 6px;flex-shrink:0;margin-top:1px}
+.kw-placement-grid{display:flex;flex-direction:column;gap:7px}
+.kp-card{background:#0d0d1a;border-radius:10px;overflow:hidden;border:1px solid #1e1e2e}
+.kp-header{display:flex;align-items:center;gap:8px;padding:9px 13px;border-bottom:1px solid #1a1a2e}
+.kp-priority{font-size:10px;font-weight:700;background:#2a1f5a;color:#a855f7;border-radius:4px;padding:1px 7px;flex-shrink:0}
+.kp-pos{font-size:12px;font-weight:500;color:#f0f0ff;flex:1}
+.kp-good{font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.25)}
+.kp-weak{font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.25)}
+.kp-missing{font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.25)}
+.kp-body{padding:9px 13px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kp-col-label{font-size:10px;color:#606080;margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px}
+.kp-current{font-size:12px;color:#9090b0;line-height:1.5}
+.kp-suggested{font-size:12px;color:#86efac;line-height:1.5;font-weight:500}
+.kp-reason{grid-column:1/-1;font-size:11px;color:#606080;padding-top:6px;border-top:1px solid #1a1a2e;line-height:1.6}
+.density-wrap{background:#111118;border:1px solid #1e1e2e;border-radius:10px;padding:13px;margin-bottom:10px}
+.density-bar-bg{background:#1a1a2e;border-radius:6px;height:8px;overflow:hidden;position:relative;margin:6px 0 3px}
+.density-bar-zone{position:absolute;top:0;height:100%;background:rgba(16,185,129,.2);left:30%;width:20%}
+.density-bar-fill{height:100%;border-radius:6px;transition:width .8s ease}
+.density-labels{display:flex;justify-content:space-between;font-size:10px;color:#606080}
+/* ── API input box ── */
+.api-notice{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.25);border-radius:10px;padding:14px;margin-bottom:14px;font-size:12px;color:#9090b0;line-height:1.8}
+.api-notice strong{color:#22d3ee}
+@media(max-width:600px){.g4{grid-template-columns:repeat(2,1fr)}.before-after{grid-template-columns:1fr}.kp-body{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">美</div>
+    <div><div class="logo-text">HK Beauty AI Pro</div><div class="logo-sub">香港護膚美妝 SEO/GEO 全能行銷套件</div></div>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+    <span class="hbadge bp">● 女性 28–59</span>
+    <span class="hbadge bb">◈ Claude AI 驅動</span>
+  </div>
+</div>
+<div class="nav">
+  <button class="nb active" onclick="switchTab('kw',this)">🔍 關鍵字流量查詢</button>
+  <button class="nb" onclick="switchTab('kwdb',this)">📊 SEO/GEO 關鍵詞庫</button>
+  <button class="nb" onclick="switchTab('audit',this)">🛠 產品頁 AI 審核</button>
+  <button class="nb" onclick="switchTab('content',this)">📝 內容策略</button>
+  <button class="nb" onclick="switchTab('analytics',this)">📈 受眾數據</button>
+</div>
+<div class="content">
+
+<!-- TAB 1 -->
+<div id="tab-kw" class="tc active">
+  <div class="stitle">關鍵字流量查詢工具</div>
+  <div class="ssub">輸入任何關鍵字，即時獲取香港市場月搜尋量、趨勢及相關詞</div>
+  <div class="card">
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input class="idk" id="kw-input" placeholder="輸入關鍵字，例如：NMN面膜、膠原蛋白推薦..." style="flex:1"/>
+      <button class="btn btp" onclick="searchKw()">查詢流量</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px">
+      <span style="font-size:11px;color:#9090b0;align-self:center">熱門：</span>
+      <span class="chip cp" style="font-size:11px;padding:3px 9px;margin:2px" onclick="quickSearch('護膚品推薦香港')">護膚品推薦香港</span>
+      <span class="chip cb" style="font-size:11px;padding:3px 9px;margin:2px" onclick="quickSearch('NMN面膜香港')">NMN面膜香港</span>
+      <span class="chip cg" style="font-size:11px;padding:3px 9px;margin:2px" onclick="quickSearch('膠原蛋白推薦')">膠原蛋白推薦</span>
+      <span class="chip cpk" style="font-size:11px;padding:3px 9px;margin:2px" onclick="quickSearch('逆齡面膜推薦')">逆齡面膜推薦</span>
+      <span class="chip cp" style="font-size:11px;padding:3px 9px;margin:2px" onclick="quickSearch('素顏霜香港')">素顏霜香港</span>
+    </div>
+  </div>
+  <div id="kw-loading" class="hidden card"><div class="lbar" style="border-radius:4px;overflow:hidden;margin-bottom:8px"></div><div style="font-size:12px;color:#9090b0">正在查詢...</div></div>
+  <div id="kw-result" class="hidden"><div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div><div style="font-size:14px;font-weight:500;color:#f0f0ff" id="r-kw-title">—</div><div style="font-size:11px;color:#9090b0;margin-top:2px">香港地區 · 繁體中文 · 過去12個月</div></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><span id="r-intent-badge" class="chip cp" style="margin:0;font-size:11px">購買意圖</span><span id="r-comp-badge" class="ktag diff-med" style="padding:3px 9px">競爭度：中</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:12px">
+      <div class="vol-card"><div class="vol-num" id="r-monthly" style="color:#a855f7">—</div><div class="vol-label">月均搜尋量</div></div>
+      <div class="vol-card"><div class="vol-num" id="r-annual" style="color:#22d3ee">—</div><div class="vol-label">年度總量</div></div>
+      <div class="vol-card"><div class="vol-num" id="r-cpc" style="color:#10b981">—</div><div class="vol-label">參考 CPC</div></div>
+      <div class="vol-card"><div class="vol-num" id="r-trend-dir" style="color:#fbbf24">—</div><div class="vol-label">趨勢方向</div></div>
+    </div>
+    <div style="margin-bottom:10px"><div style="font-size:11px;color:#9090b0;margin-bottom:5px">過去12個月搜尋趨勢</div><div class="trend-bar" id="trend-chart"></div></div>
+    <div style="background:#0d0d1a;border-radius:8px;padding:11px;font-size:12px;color:#9090b0;line-height:1.7;margin-bottom:12px" id="r-intent-text"></div>
+    <div style="font-size:12px;font-weight:500;color:#a855f7;margin-bottom:8px">相關關鍵字（點擊查詢）</div>
+    <div id="r-related"></div>
+  </div></div>
+  <div id="kw-empty" style="text-align:center;padding:40px;color:#9090b0;font-size:13px">輸入關鍵字後點擊「查詢流量」✨</div>
+</div>
+
+<!-- TAB 2 -->
+<div id="tab-kwdb" class="tc">
+  <div class="stitle">SEO &amp; GEO 關鍵詞庫</div>
+  <div class="ssub">香港本地市場 · 女性 28–59 歲 · 四大品類</div>
+  <div class="g4">
+    <div class="sc"><div class="slabel">GEO 可見度評分</div><div class="sval" style="color:#a855f7">71</div><div class="schange up">↑ 14.2% 本月</div></div>
+    <div class="sc"><div class="slabel">監控關鍵詞總數</div><div class="sval">132</div><div class="schange up">↑ 本月新增 18 個</div></div>
+    <div class="sc"><div class="slabel">月均搜尋流量</div><div class="sval">86.4K</div><div class="schange up">↑ 22.8%</div></div>
+    <div class="sc"><div class="slabel">AI 引擎引用率</div><div class="sval" style="color:#22d3ee">38%</div><div class="schange up">↑ 上升中</div></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">品類篩選</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px" id="cat-btns">
+      <button class="dbtn active" onclick="selectCat(this,'skincare')">護膚品</button>
+      <button class="dbtn" onclick="selectCat(this,'makeup')">化妝品</button>
+      <button class="dbtn" onclick="selectCat(this,'health')">保健品</button>
+      <button class="dbtn" onclick="selectCat(this,'lifestyle')">生活用品</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr auto auto auto;padding:5px 0;border-bottom:1px solid #2a2a40;font-size:11px;color:#9090b0;font-weight:500">
+      <span>關鍵詞</span><span style="min-width:80px;text-align:right;padding-right:10px">月搜尋量</span><span style="min-width:60px;text-align:right;padding-right:10px">競爭度</span><span style="min-width:55px;text-align:center">操作</span>
+    </div>
+    <div id="kw-table"></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ctitle">GEO vs SEO 對比</div><div style="display:flex;gap:12px;margin-bottom:10px"><div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#9090b0"><div style="width:10px;height:10px;border-radius:2px;background:#7c3aed"></div>GEO</div><div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#9090b0"><div style="width:10px;height:10px;border-radius:2px;background:#22d3ee"></div>傳統 SEO</div></div><div id="geo-chart" style="display:flex;gap:6px;align-items:flex-end;height:120px;padding-bottom:22px"></div></div>
+    <div class="card"><div class="ctitle">熱門關鍵詞標籤</div><div id="chip-cloud" style="line-height:1.9"></div></div>
+  </div>
+</div>
+
+<!-- TAB 3 AI 審核 -->
+<div id="tab-audit" class="tc">
+  <div class="stitle">產品頁 AI 審核 &amp; 文字優化</div>
+  <div class="ssub">貼上產品頁文字，Claude AI 針對真實內容生成 SEO/GEO 改寫建議</div>
+
+  <div id="audit-input-card" class="card">
+    <div class="ctitle">第一步 — 產品 URL（選填）</div>
+    <input class="idk" id="audit-url" placeholder="https://yourshop.hk/products/product-name" style="margin-bottom:14px"/>
+    <div class="ctitle">第二步 — 輸入方式</div>
+    <div class="tab-row">
+      <button class="tab-opt active" onclick="switchAuditMode('paste',this)">貼上產品頁文字</button>
+      <button class="tab-opt" onclick="switchAuditMode('manual',this)">手動填寫產品資料</button>
+    </div>
+    <div id="audit-mode-paste">
+      <div class="notice"><strong style="color:#a855f7">如何獲取產品頁文字：</strong><br>打開產品頁 → 全選（Ctrl+A）→ 複製（Ctrl+C）→ 貼入下方文字框</div>
+      <textarea class="idk" id="audit-paste" placeholder="將產品頁所有文字貼上到這裡..."></textarea>
+    </div>
+    <div id="audit-mode-manual" class="hidden">
+      <div style="display:grid;gap:9px">
+        <div><div style="font-size:12px;color:#9090b0;margin-bottom:4px">產品名稱 / 現有標題</div><input class="idk" id="m-title" placeholder="例如：NMN逆齡再生面膜"/></div>
+        <div><div style="font-size:12px;color:#9090b0;margin-bottom:4px">產品類別</div>
+          <select class="idk" id="m-cat"><option value="mask">面膜</option><option value="serum">精華/面霜/護膚品</option><option value="supplement">保健補充品</option><option value="makeup">化妝品</option><option value="device">美容儀器/生活用品</option></select></div>
+        <div><div style="font-size:12px;color:#9090b0;margin-bottom:4px">主要功效 / 賣點</div><input class="idk" id="m-benefits" placeholder="例如：逆齡、抗衰老、美白、NMN成分"/></div>
+        <div><div style="font-size:12px;color:#9090b0;margin-bottom:4px">主要成分</div><input class="idk" id="m-ingr" placeholder="例如：NMN、玻尿酸、維他命C"/></div>
+        <div><div style="font-size:12px;color:#9090b0;margin-bottom:4px">現有產品描述</div><textarea class="idk" id="m-desc" style="min-height:80px" placeholder="貼上現有產品描述..."></textarea></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+      <button class="btn bto" onclick="clearAudit()">清除</button>
+      <button class="btn btp" id="audit-btn" onclick="runAudit()">✦ AI 分析並生成優化建議</button>
+    </div>
+  </div>
+
+  <div id="audit-loading" class="hidden card">
+    <div class="lbar" style="border-radius:4px;overflow:hidden;margin-bottom:8px"></div>
+    <div style="font-size:12px;color:#9090b0" id="audit-loading-msg">🔍 分析產品頁結構中...</div>
+    <div style="font-size:11px;color:#606080;margin-top:3px">約需 20–40 秒，請稍候</div>
+  </div>
+
+  <div id="audit-results" class="hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div><div style="font-size:14px;font-weight:500;color:#f0f0ff">AI 分析完成</div><div style="font-size:11px;color:#9090b0" id="audit-result-url"></div></div>
+      <div style="display:flex;gap:6px">
+        <button class="btn bto" onclick="resetAudit()">重新分析</button>
+        <button class="btn btg btsm" id="copy-all-btn" onclick="copyAllAudit()">複製全部建議</button>
+      </div>
+    </div>
+    <div class="score-row" id="audit-scores"></div>
+    <div id="audit-sections"></div>
+  </div>
+</div>
+
+<!-- TAB 4 -->
+<div id="tab-content" class="tc">
+  <div class="stitle">內容 SEO 策略建議</div>
+  <div class="ssub">針對香港女性 28–59 歲 · 四大品類內容優化方向</div>
+  <div class="g2">
+    <div class="card">
+      <div class="ctitle">護膚品 — 高轉化內容主題</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:#0d0d1a;border-radius:8px;padding:10px;border-left:3px solid #7c3aed"><div style="font-size:13px;font-weight:500;color:#f0f0ff;margin-bottom:3px">香港天氣皮膚問題系列</div><div style="font-size:12px;color:#9090b0">「香港夏天出汗點保濕？」「梅雨季節防粉刺攻略」— 貼近本地氣候痛點</div></div>
+        <div style="background:#0d0d1a;border-radius:8px;padding:10px;border-left:3px solid #c026d3"><div style="font-size:13px;font-weight:500;color:#f0f0ff;margin-bottom:3px">成份解析教育內容</div><div style="font-size:12px;color:#9090b0">「NMN面膜功效解析」「維他命C精華幾濃度先有效？」— 搜尋量高，建立專業形象</div></div>
+        <div style="background:#0d0d1a;border-radius:8px;padding:10px;border-left:3px solid #22d3ee"><div style="font-size:13px;font-weight:500;color:#f0f0ff;margin-bottom:3px">年齡段護膚指南</div><div style="font-size:12px;color:#9090b0">「30歲後護膚重點」「45歲抗衰老護膚程序」— 精準覆蓋 28–59 歲受眾</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctitle">保健品 &amp; 生活用品</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:#0d0d1a;border-radius:8px;padding:10px;border-left:3px solid #10b981"><div style="font-size:13px;font-weight:500;color:#f0f0ff;margin-bottom:3px">保健品功效問答</div><div style="font-size:12px;color:#9090b0">「NMN面膜用幾耐見效？」「膠原蛋白邊款最適合香港人？」</div></div>
+        <div style="background:#0d0d1a;border-radius:8px;padding:10px;border-left:3px solid #d97706"><div style="font-size:13px;font-weight:500;color:#f0f0ff;margin-bottom:3px">生活用品評測比較</div><div style="font-size:12px;color:#9090b0">「逆齡面膜推薦比較 2025」— 比較型內容 SEO 競爭低但轉化高</div></div>
+        <div style="background:#0d0d1a;border-radius:8px;padding:10px;border-left:3px solid #a855f7"><div style="font-size:13px;font-weight:500;color:#f0f0ff;margin-bottom:3px">節日行銷內容</div><div style="font-size:12px;color:#9090b0">母親節護膚禮盒、中秋美容套裝 — 配合香港節慶，搜尋量爆升</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 5 -->
+<div id="tab-analytics" class="tc">
+  <div class="stitle">目標受眾數據分析</div>
+  <div class="ssub">香港女性 28–59 歲 · 護膚美妝消費行為洞察</div>
+  <div class="g4">
+    <div class="sc"><div class="slabel">核心受眾規模</div><div class="sval">1.24M</div><div class="schange up">香港女性 28–59歲</div></div>
+    <div class="sc"><div class="slabel">線上美妝消費佔比</div><div class="sval" style="color:#a855f7">67%</div><div class="schange up">↑ 每年增長 12%</div></div>
+    <div class="sc"><div class="slabel">平均月消費額</div><div class="sval" style="color:#22d3ee">HK$820</div><div class="schange up">護膚 + 保健品</div></div>
+    <div class="sc"><div class="slabel">手機購物佔比</div><div class="sval" style="color:#10b981">78%</div><div class="schange" style="color:#9090b0">IG/小紅書引流</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ctitle">年齡層搜尋偏好</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:#9090b0">28–34歲：美白、防曬、素顏霜</span><span style="color:#a855f7">38%</span></div><div class="pb"><div class="pf pp" style="width:76%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:#9090b0">35–44歲：抗衰老、NMN、膠原蛋白</span><span style="color:#22d3ee">32%</span></div><div class="pb"><div class="pf pb2" style="width:64%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:#9090b0">45–59歲：逆齡、保濕、保健補充品</span><span style="color:#10b981">30%</span></div><div class="pb"><div class="pf pg" style="width:60%"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ctitle">搜尋平台分佈</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#0d0d1a;border-radius:6px"><span style="font-size:12px;color:#9090b0">Google 搜尋</span><div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:5px;background:#1a1a2e;border-radius:3px;overflow:hidden"><div style="width:72%;height:100%;background:#7c3aed;border-radius:3px"></div></div><span style="font-size:12px;color:#a855f7">72%</span></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#0d0d1a;border-radius:6px"><span style="font-size:12px;color:#9090b0">ChatGPT / AI 搜尋</span><div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:5px;background:#1a1a2e;border-radius:3px;overflow:hidden"><div style="width:41%;height:100%;background:#22d3ee;border-radius:3px"></div></div><span style="font-size:12px;color:#22d3ee">41%</span></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#0d0d1a;border-radius:6px"><span style="font-size:12px;color:#9090b0">小紅書搜尋</span><div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:5px;background:#1a1a2e;border-radius:3px;overflow:hidden"><div style="width:58%;height:100%;background:#c026d3;border-radius:3px"></div></div><span style="font-size:12px;color:#e879f9">58%</span></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#0d0d1a;border-radius:6px"><span style="font-size:12px;color:#9090b0">YouTube 搜尋</span><div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:5px;background:#1a1a2e;border-radius:3px;overflow:hidden"><div style="width:34%;height:100%;background:#d97706;border-radius:3px"></div></div><span style="font-size:12px;color:#fbbf24">34%</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div></div>
+
+<script>
+function switchTab(t,btn){document.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+t).classList.add('active');btn.classList.add('active');if(t==='kwdb')renderGeoChart();}
+
+const kwDB={'NMN面膜香港':{monthly:6800,cpc:6.2,comp:'低',compClass:'diff-high',intent:'購買意圖',trend:[30,35,38,42,48,55,62,68,74,80,86,92],related:[['NMN面膜功效',4200,'cp'],['逆齡面膜推薦',5600,'cg'],['日本NMN面膜',3800,'cb'],['NMN護膚品香港',3100,'cp'],['NMN抗衰老',2800,'cg']]},'逆齡面膜推薦':{monthly:5600,cpc:5.4,comp:'低',compClass:'diff-high',intent:'購買意圖',trend:[28,32,36,40,46,52,58,64,70,76,82,88],related:[['抗衰老面膜香港',4800,'cp'],['逆齡護膚品',3900,'cg'],['去皺面膜推薦',3400,'cb'],['NMN面膜香港',6800,'cp'],['日本面膜推薦',4100,'cg']]},'護膚品推薦香港':{monthly:18400,cpc:4.2,comp:'高',compClass:'diff-low',intent:'購買意圖',trend:[55,60,58,62,70,82,78,75,85,90,88,95],related:[['美白護膚品香港',12600,'cp'],['去暗瘡護膚品',9800,'cg'],['敏感肌護膚品',8200,'cb'],['抗衰老護膚品',7400,'cp'],['護膚品套裝',6100,'cg']]},'膠原蛋白推薦':{monthly:15600,cpc:5.8,comp:'高',compClass:'diff-low',intent:'資訊+購買',trend:[48,52,60,65,58,72,80,75,88,92,85,98],related:[['膠原蛋白功效',11200,'cb'],['膠原蛋白飲品',9400,'cg'],['膠原蛋白補充品',8100,'cp'],['服用時間',5600,'cb'],['魚膠原vs植物',4800,'cg']]},'素顏霜香港':{monthly:9800,cpc:3.6,comp:'低',compClass:'diff-high',intent:'購買意圖',trend:[40,45,48,52,55,60,58,62,68,72,76,80],related:[['素顏霜邊款好',7200,'cg'],['素顏霜推薦2025',6400,'cp'],['素顏霜遮瑕力',5100,'cb'],['素顏BB霜',4300,'cg'],['素顏妝容教學',3900,'cb']]}};
+const intentMap={'購買意圖':'此關鍵字顯示強烈購買意圖，建議產品頁直接展示價格、優惠及購買按鈕，加入「立即購買」「免費本地送貨」等轉化元素。','資訊+購買':'兼具資訊及購買意圖，建議加入成分解析、使用教學，同時提供清晰購買路徑。','資訊搜尋':'以資訊搜尋為主，適合撰寫教育性內容透過內容行銷吸引流量再轉化。'};
+
+function searchKw(){const v=document.getElementById('kw-input').value.trim();if(!v)return;doKwSearch(v);}
+function quickSearch(kw){document.getElementById('kw-input').value=kw;doKwSearch(kw);}
+function doKwSearch(kw){
+  document.getElementById('kw-empty').classList.add('hidden');
+  document.getElementById('kw-result').classList.add('hidden');
+  document.getElementById('kw-loading').classList.remove('hidden');
+  setTimeout(()=>{
+    document.getElementById('kw-loading').classList.add('hidden');
+    const d=kwDB[kw]||{monthly:Math.floor(Math.random()*8000)+1500,cpc:(Math.random()*4+1.5).toFixed(1),comp:['低','中','高'][Math.floor(Math.random()*3)],compClass:['diff-high','diff-med','diff-low'][Math.floor(Math.random()*3)],intent:'購買意圖',trend:Array.from({length:12},()=>Math.floor(Math.random()*60)+30),related:[[kw+'推薦',Math.floor(Math.random()*4000)+500,'cp'],[kw+'香港',Math.floor(Math.random()*3000)+400,'cg'],[kw+'效果',Math.floor(Math.random()*2500)+300,'cb'],[kw+'邊款好',Math.floor(Math.random()*2000)+200,'cp'],[kw+'評價',Math.floor(Math.random()*1500)+200,'cg']]};
+    document.getElementById('r-kw-title').textContent='「'+kw+'」流量分析';
+    document.getElementById('r-monthly').textContent=Number(d.monthly).toLocaleString();
+    document.getElementById('r-annual').textContent=Math.round(d.monthly*12/1000)+'K';
+    document.getElementById('r-cpc').textContent='HK$'+Number(d.cpc).toFixed(1);
+    const up=d.trend[11]>d.trend[0];
+    document.getElementById('r-trend-dir').textContent=up?'↑ 上升':'↓ 下降';
+    document.getElementById('r-trend-dir').style.color=up?'#10b981':'#ef4444';
+    document.getElementById('r-intent-badge').textContent=d.intent;
+    const cb=document.getElementById('r-comp-badge');cb.textContent='競爭度：'+d.comp;cb.className='ktag '+d.compClass;cb.style.padding='3px 9px';
+    const mn=Math.min(...d.trend),mx=Math.max(...d.trend);
+    document.getElementById('trend-chart').innerHTML=d.trend.map((v2,i)=>`<div class="tb" style="height:${Math.round(((v2-mn)/(mx-mn||1))*36+10)}px;background:${i===11?'#a855f7':'#3a2a60'}"></div>`).join('');
+    document.getElementById('r-intent-text').textContent=intentMap[d.intent]||intentMap['購買意圖'];
+    document.getElementById('r-related').innerHTML=d.related.map(([rk,rv,rc])=>`<div class="rkw-row" onclick="quickSearch('${rk}')"><span style="color:#f0f0ff">${rk}</span><div style="display:flex;align-items:center;gap:8px"><span style="color:#a855f7">${Number(rv).toLocaleString()}/月</span><span class="chip ${rc}" style="font-size:10px;padding:2px 8px;margin:0">查詢</span></div></div>`).join('');
+    document.getElementById('kw-result').classList.remove('hidden');
+  },900);
+}
+document.getElementById('kw-input').addEventListener('keydown',e=>{if(e.key==='Enter')searchKw();});
+
+const kwData={skincare:[{kw:'護膚品推薦香港',vol:18400,comp:'高',diff:'diff-low',type:'cp'},{kw:'去暗瘡護膚品',vol:12600,comp:'中',diff:'diff-med',type:'cb'},{kw:'素顏霜香港邊款好',vol:9800,comp:'低',diff:'diff-high',type:'cg'},{kw:'敏感肌護膚品HK',vol:8200,comp:'中',diff:'diff-med',type:'cb'},{kw:'香港抗衰老精華',vol:7600,comp:'中',diff:'diff-med',type:'cp'},{kw:'去印神器香港',vol:6900,comp:'低',diff:'diff-high',type:'cg'},{kw:'防曬香港幾多好',vol:6400,comp:'低',diff:'diff-high',type:'cg'},{kw:'煙酰胺精華效果',vol:5800,comp:'中',diff:'diff-med',type:'cb'},{kw:'保濕面膜推介',vol:5200,comp:'高',diff:'diff-low',type:'cp'},{kw:'眼霜去黑眼圈',vol:4700,comp:'低',diff:'diff-high',type:'cg'}],makeup:[{kw:'底妝推薦香港持妝',vol:14200,comp:'高',diff:'diff-low',type:'cp'},{kw:'香港天氣適合底妝',vol:10800,comp:'低',diff:'diff-high',type:'cg'},{kw:'唇膏顏色推薦2025',vol:9600,comp:'中',diff:'diff-med',type:'cb'},{kw:'遮瑕膏香港推薦',vol:8100,comp:'中',diff:'diff-med',type:'cb'},{kw:'防水眼線香港',vol:7200,comp:'低',diff:'diff-high',type:'cg'},{kw:'素顏感妝容教學',vol:6500,comp:'低',diff:'diff-high',type:'cg'},{kw:'化妝品網購推薦',vol:5900,comp:'高',diff:'diff-low',type:'cp'},{kw:'氣墊粉底推薦HK',vol:5400,comp:'中',diff:'diff-med',type:'cb'},{kw:'腮紅顯氣色推薦',vol:4600,comp:'低',diff:'diff-high',type:'cg'},{kw:'定妝噴霧香港',vol:3900,comp:'低',diff:'diff-high',type:'cg'}],health:[{kw:'膠原蛋白推薦香港',vol:15600,comp:'高',diff:'diff-low',type:'cp'},{kw:'NMN面膜香港',vol:6800,comp:'低',diff:'diff-high',type:'cg'},{kw:'逆齡面膜推薦',vol:5600,comp:'低',diff:'diff-high',type:'cg'},{kw:'益生菌香港邊款好',vol:11200,comp:'中',diff:'diff-med',type:'cb'},{kw:'維他命C補充劑HK',vol:9400,comp:'中',diff:'diff-med',type:'cb'},{kw:'美白保健品推薦',vol:8700,comp:'低',diff:'diff-high',type:'cg'},{kw:'減肥保健品2025',vol:8100,comp:'高',diff:'diff-low',type:'cp'},{kw:'魚油Omega3推薦',vol:7200,comp:'中',diff:'diff-med',type:'cb'},{kw:'香港女性補充品',vol:6600,comp:'低',diff:'diff-high',type:'cg'},{kw:'抗氧化補充品',vol:5400,comp:'低',diff:'diff-high',type:'cg'}],lifestyle:[{kw:'潔面儀香港推薦',vol:11800,comp:'中',diff:'diff-med',type:'cb'},{kw:'防曬用品邊款好',vol:9600,comp:'低',diff:'diff-high',type:'cg'},{kw:'洗面奶敏感肌',vol:8800,comp:'中',diff:'diff-med',type:'cb'},{kw:'面膜機香港評測',vol:7400,comp:'低',diff:'diff-high',type:'cg'},{kw:'香薰機香港推薦',vol:6900,comp:'中',diff:'diff-med',type:'cpk'},{kw:'沐浴露推薦香港',vol:6200,comp:'中',diff:'diff-med',type:'cb'},{kw:'護髮素香港評測',vol:5600,comp:'低',diff:'diff-high',type:'cg'},{kw:'電動牙刷香港',vol:5100,comp:'高',diff:'diff-low',type:'cp'},{kw:'手部護理產品HK',vol:4300,comp:'低',diff:'diff-high',type:'cg'},{kw:'香港生活用品網購',vol:3800,comp:'高',diff:'diff-low',type:'cp'}]};
+const chipsBycat={skincare:[['護膚品推薦','cp'],['去暗瘡','cb'],['素顏霜','cg'],['敏感肌','cb'],['去印神器','cg'],['抗衰老','cp'],['保濕面膜','cp'],['防曬','cg'],['眼霜','cg'],['煙酰胺','cb']],makeup:[['底妝持妝','cp'],['素顏感妝容','cg'],['唇膏推薦','cb'],['遮瑕膏','cb'],['防水眼線','cg'],['氣墊粉底','cb'],['定妝噴霧','cg'],['化妝品網購','cp'],['腮紅','cg'],['香港化妝','cp']],health:[['膠原蛋白','cp'],['NMN面膜','cg'],['逆齡面膜','cg'],['益生菌','cb'],['維他命C','cb'],['美白保健','cg'],['減肥保健','cp'],['魚油','cb'],['女性補充品','cg'],['抗氧化','cg']],lifestyle:[['潔面儀','cb'],['防曬用品','cg'],['面膜機','cg'],['洗面奶','cb'],['香薰機','cpk'],['沐浴露','cb'],['護髮素','cg'],['電動牙刷','cp'],['手部護理','cg'],['生活網購','cp']]};
+let curCat='skincare';
+function selectCat(btn,cat){document.querySelectorAll('#cat-btns .dbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');curCat=cat;renderKwTable();renderChips();}
+function renderKwTable(){document.getElementById('kw-table').innerHTML=kwData[curCat].map(r=>`<div class="krow"><div style="color:#f0f0ff;padding-right:8px">${r.kw}</div><div style="text-align:right;padding-right:10px"><div style="color:#a855f7;font-weight:500">${r.vol.toLocaleString()}/月</div><div style="width:55px;height:3px;background:#1a1a2e;border-radius:2px;margin-top:3px;overflow:hidden;margin-left:auto"><div style="width:${Math.round((r.vol/20000)*100)}%;height:100%;background:#7c3aed;border-radius:2px"></div></div></div><div style="text-align:right;padding-right:10px"><span class="ktag ${r.diff}">${r.comp}</span></div><div style="text-align:center"><button class="chip ${r.type}" style="padding:2px 7px;font-size:10px;margin:0;border:none;cursor:pointer" onclick="switchToKw('${r.kw}')">查流量</button></div></div>`).join('');}
+function renderChips(){document.getElementById('chip-cloud').innerHTML=chipsBycat[curCat].map(([t,c])=>`<span class="chip ${c}">${t}</span>`).join('');}
+function switchToKw(kw){switchTab('kw',document.querySelectorAll('.nb')[0]);document.getElementById('kw-input').value=kw;doKwSearch(kw);}
+function renderGeoChart(){const data=[{l:'護膚\n推薦',g:68,s:81},{l:'NMN\n面膜',g:82,s:55},{l:'保健\n問答',g:79,s:52},{l:'成份\n解析',g:85,s:48},{l:'整體\n品牌',g:71,s:66}];document.getElementById('geo-chart').innerHTML=data.map(d=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100px;position:relative"><div style="display:flex;gap:2px;align-items:flex-end;width:100%"><div style="flex:1;background:#7c3aed;border-radius:3px 3px 0 0;height:${Math.round(d.g*.95)}px;opacity:.9"></div><div style="flex:1;background:#22d3ee;border-radius:3px 3px 0 0;height:${Math.round(d.s*.95)}px;opacity:.6"></div></div><div style="font-size:9px;color:#9090b0;text-align:center;white-space:pre;position:absolute;bottom:-18px">${d.l}</div></div>`).join('');}
+
+let savedApiKey="set-via-server";
+/* ===== AI 審核 ===== */
+let auditMode='paste',allAuditText='',pendingUrl='';
+function switchAuditMode(mode,btn){auditMode=mode;document.querySelectorAll('.tab-opt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('audit-mode-paste').classList.toggle('hidden',mode!=='paste');document.getElementById('audit-mode-manual').classList.toggle('hidden',mode!=='manual');}
+function clearAudit(){['audit-url','audit-paste','m-title','m-benefits','m-ingr','m-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});}
+function resetAudit(){document.getElementById('audit-results').classList.add('hidden');document.getElementById('audit-input-card').classList.remove('hidden');document.getElementById('audit-loading').classList.add('hidden');document.getElementById('audit-btn').disabled=false;}
+
+async function runAudit(){
+  const url=document.getElementById('audit-url').value.trim();
+  let content='';
+  if(auditMode==='paste'){
+    content=document.getElementById('audit-paste').value.trim();
+    if(!content){alert('請先貼上產品頁文字內容');return;}
+  } else {
+    const title=document.getElementById('m-title').value.trim();
+    const cat=document.getElementById('m-cat').value;
+    const ben=document.getElementById('m-benefits').value.trim();
+    const ingr=document.getElementById('m-ingr').value.trim();
+    const desc=document.getElementById('m-desc').value.trim();
+    if(!title&&!ben){alert('請至少填寫產品名稱或功效');return;}
+    const catL={mask:'面膜',serum:'精華/面霜',supplement:'保健補充品',makeup:'化妝品',device:'美容儀器'}[cat];
+    content=`產品類別:${catL}\n產品標題:${title}\n主要功效:${ben}\n成分:${ingr}\n現有描述:${desc}`;
+  }
+  pendingUrl=url;
+  document.getElementById('audit-input-card').classList.add('hidden');
+  document.getElementById('audit-loading').classList.remove('hidden');
+  document.getElementById('audit-result-url').textContent=url||'（未填寫 URL）';
+  document.getElementById('audit-btn').disabled=true;
+  const loadMsgs=['🔍 分析產品頁結構中...','📊 評估關鍵詞密度...','✍️ 生成 SEO/GEO 改寫建議...','🤖 優化 AI 引擎可見度...'];
+  let mi=0;const msgEl=document.getElementById('audit-loading-msg');
+  const mt=setInterval(()=>{mi=(mi+1)%loadMsgs.length;if(msgEl)msgEl.textContent=loadMsgs[mi];},3000);
+
+  const prompt=`你是香港電商SEO/GEO顧問，優化護膚品產品頁（目標：香港女性28–59歲）。
+
+關鍵詞植入規則：
+1.Page Title：主詞最前「主詞｜副賣點｜香港」60字內
+2.H1：含核心關鍵詞自然句式
+3.Meta Desc：前60字含關鍵詞結尾行動呼籲150字內
+4.首段：主詞首兩句+香港天氣痛點
+5.功效列表：每項含廣東話長尾詞「功效（搜尋詞）」
+6.圖片Alt：描述性關鍵詞
+7.URL：英文/拼音避免數字
+8.FAQ：廣東話口語問答答案完整可獨立引用
+密度1.5–2.5%，變體分散，禁止stuffing。
+
+只輸出純JSON不含任何說明文字或markdown符號：
+{"seo_score":數字,"geo_score":數字,"issues_count":數字,"opportunity":"8字內","url_old":"現有URL","url_new":"建議slug","url_reasons":["原因1","原因2","原因3"],"meta_title_old":"現有","meta_title_new":"建議60字","meta_desc_old":"現有","meta_desc_new":"建議150字","h1_old":"現有","h1_new":"建議","h1_reason":"原因","intro_old":"現有首段","intro_new":"建議首段120字","intro_reason":"原因","features_old":"現有功效","features_new":"4項每項含廣東話搜尋詞用\\n分隔","features_reason":"原因","img_alt_suggestions":["alt1","alt2","alt3"],"kw_density_score":數字,"kw_density_note":"說明","kw_placement":[{"position":"Page Title","priority":1,"status":"missing/weak/good","current":"現有","suggested":"建議","reason":"原因"},{"position":"H1 標題","priority":2,"status":"missing/weak/good","current":"現有","suggested":"建議","reason":"原因"},{"position":"首段100字","priority":3,"status":"missing/weak/good","current":"現有","suggested":"建議","reason":"原因"},{"position":"功效列表","priority":4,"status":"missing/weak/good","current":"現有","suggested":"建議","reason":"原因"},{"position":"圖片Alt文字","priority":5,"status":"missing/weak/good","current":"現有","suggested":"建議","reason":"原因"},{"position":"URL Slug","priority":6,"status":"missing/weak/good","current":"現有","suggested":"建議","reason":"原因"},{"position":"FAQ問答","priority":7,"status":"missing/weak/good","current":"現有","suggested":"建議","reason":"原因"}],"geo_q1":"廣東話問題","geo_a1":"完整答案含數據","geo_q2":"廣東話問題","geo_a2":"完整答案","geo_q3":"廣東話問題","geo_a3":"完整答案","keywords":["詞1","詞2","詞3","詞4","詞5","詞6"]}
+
+產品頁（URL:${url||'未提供'}）：
+${content}`;
+
+  try{
+    const res=await fetch('/api/audit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-opus-4-5',max_tokens:4000,system:'只輸出純JSON，不含任何說明文字或markdown符號。',messages:[{role:'user',content:prompt}]})
+    });
+    clearInterval(mt);
+    const data=await res.json();
+    if(data.error){throw new Error(data.error.message||'API 錯誤');}
+    const raw=(data.content||[]).map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+    let d;
+    try{d=JSON.parse(raw);}catch(e){const m=raw.match(/\{[\s\S]*\}/);if(m)d=JSON.parse(m[0]);else throw e;}
+    renderAuditResults(d,pendingUrl);
+  }catch(err){
+    clearInterval(mt);
+    document.getElementById('audit-loading').innerHTML=`<div style="color:#ef4444;font-size:13px;padding:14px;background:#1a0a0a;border-radius:8px;border:1px solid rgba(239,68,68,.3)">❌ 分析失敗：${err.message}<br><button class="btn bto" style="margin-top:8px;font-size:12px" onclick="resetAudit()">返回重試</button></div>`;
+  }
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+const fIcons=['✨','💧','🌿','⚡','🔬','🌸','💎','🛡'];
+
+function renderFeaturesVisual(raw){
+  if(!raw)return'';
+  const lines=(raw||'').replace(/\\n/g,'\n').split('\n').map(s=>s.trim()).filter(Boolean);
+  const cards=lines.map((line,i)=>{const m=line.match(/[（(]([^）)]+)[）)]$/);let title=line,kw='';if(m){title=line.slice(0,m.index).trim();kw=m[1];}return `<div class="feature-card"><div class="fc-icon">${fIcons[i%fIcons.length]}</div><div><div class="fc-title">${esc(title)}</div>${kw?`<span class="fc-kw">${esc(kw)}</span>`:''}</div></div>`;}).join('');
+  return `<div><div style="font-size:10px;color:#10b981;margin-bottom:7px"><span style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:4px;padding:1px 7px">✦ 優化後 — Icon 賣點卡片</span></div><div class="feature-grid">${cards}</div></div>`;
+}
+function renderIntroVisual(text){
+  if(!text)return'';
+  const pain=['香港天氣','濕熱','出汗','暗啞','乾燥','敏感','毛孔','暗瘡','衰老','皺紋','鬆弛','色斑','黑眼圈'];
+  const benefit=['深層保濕','美白','提亮','緊緻','逆齡','修復','煥活','去印','抗氧化','膠原蛋白','NMN','補水'];
+  const cta=['立即','馬上','免費','限時','香港本地送貨','試用','搶購','優惠'];
+  let html=esc(text);
+  pain.forEach(w=>{html=html.replace(new RegExp(w,'g'),`<span class="pain-tag">${w}</span>`);});
+  benefit.forEach(w=>{html=html.replace(new RegExp(w,'g'),`<span class="benefit-tag">${w}</span>`);});
+  cta.forEach(w=>{html=html.replace(new RegExp(w,'g'),`<span class="cta-tag">${w}</span>`);});
+  return `<div><div style="font-size:10px;color:#10b981;margin-bottom:6px"><span style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:4px;padding:1px 7px">✦ 優化後</span></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px"><span class="pain-tag" style="font-size:10px">痛點詞</span><span class="benefit-tag" style="font-size:10px">功效詞</span><span class="cta-tag" style="font-size:10px">行動詞</span></div><div class="intro-visual">${html}</div></div>`;
+}
+function renderGeoQA(d){
+  const pairs=[[d.geo_q1,d.geo_a1],[d.geo_q2,d.geo_a2],[d.geo_q3,d.geo_a3]].filter(([q])=>q);
+  return `<div class="geo-qa-cards">${pairs.map(([q,a])=>`<div class="geo-qa-card"><div class="geo-qa-q"><span class="q-badge">Q</span><span>${esc(q)}</span></div><div class="geo-qa-a"><span class="a-badge">A</span><span>${esc(a)}</span></div></div>`).join('')}</div>`;
+}
+function renderKwPlacement(d){
+  const items=d.kw_placement||[];
+  const sL={'good':'✓ 良好','weak':'⚠ 偏弱','missing':'✗ 缺失'};
+  const sC={'good':'kp-good','weak':'kp-weak','missing':'kp-missing'};
+  const ds=d.kw_density_score||0;
+  const bc=ds>=30&&ds<=50?'#10b981':ds<30?'#ef4444':'#f59e0b';
+  const densityBlock=`<div class="density-wrap" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-size:12px;font-weight:500;color:#f0f0ff">關鍵詞密度評估</div><div style="font-size:13px;font-weight:500;color:${bc}">${ds}/100</div></div><div class="density-bar-bg"><div class="density-bar-zone"></div><div class="density-bar-fill" style="width:${Math.min(ds,100)}%;background:${bc}"></div></div><div class="density-labels"><span>過低</span><span style="color:#10b981">最佳 1.5–2.5%</span><span>過高</span></div>${d.kw_density_note?`<div style="font-size:11px;color:#9090b0;margin-top:7px;padding:7px 10px;background:#0d0d1a;border-radius:6px">${esc(d.kw_density_note)}</div>`:''}</div>`;
+  const cards=items.map(item=>`<div class="kp-card"><div class="kp-header"><span class="kp-priority">#${item.priority}</span><span class="kp-pos">${esc(item.position)}</span><span class="${sC[item.status]||'kp-weak'}">${sL[item.status]||item.status}</span></div><div class="kp-body"><div><div class="kp-col-label">現有</div><div class="kp-current">${esc(item.current||'未偵測')}</div></div><div><div class="kp-col-label">建議</div><div class="kp-suggested">${esc(item.suggested||'')}</div></div><div class="kp-reason">💡 ${esc(item.reason||'')}</div></div></div>`).join('');
+  return densityBlock+`<div class="kw-placement-grid">${cards}</div>`;
+}
+function renderImgAlts(alts){
+  if(!alts||!alts.length)return'';
+  return `<div style="font-size:12px;color:#9090b0;margin-bottom:9px">將以下 alt 文字加入對應產品圖片：</div><div style="display:flex;flex-direction:column;gap:6px">${alts.map((a,i)=>`<div style="background:#0d0d1a;border-radius:8px;padding:9px 13px;display:flex;align-items:center;gap:10px"><span style="font-size:10px;background:#1a1a2e;color:#a855f7;border-radius:4px;padding:2px 7px;flex-shrink:0">圖${i+1}</span><code style="font-size:12px;color:#86efac;font-family:monospace">alt="${esc(a)}"</code></div>`).join('')}</div>`;
+}
+function sec(title,priority,body){const tag=priority==='red'?'<span class="tag-red" style="margin-left:7px">高優先</span>':'<span class="tag-green-sm" style="margin-left:7px">中優先</span>';return `<div class="result-section"><div class="rs-header" onclick="toggleRS(this)"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px"><span class="rs-title">${title}</span>${tag}</div><span style="color:#9090b0;margin-left:8px;flex-shrink:0">▼</span></div><div class="rs-body">${body}</div></div>`;}
+function ba(o,n,label){return `<div class="before-after"><div class="ba-box ba-before"><div class="ba-label">${label} 修改前</div><div class="ba-text">${esc(o||'（未偵測）')}</div></div><div class="ba-box ba-after"><div class="ba-label">${label} 修改後</div><div class="ba-text">${esc(n||'')}</div></div></div>`;}
+function toggleRS(h){const b=h.nextElementSibling,a=h.querySelector('span:last-child');const o=b.style.display!=='none';b.style.display=o?'none':'block';if(a)a.textContent=o?'▶':'▼';}
+
+function renderAuditResults(d,url){
+  document.getElementById('audit-loading').classList.add('hidden');
+  document.getElementById('audit-results').classList.remove('hidden');
+  const sc=v=>v>=75?'#10b981':v>=50?'#f59e0b':'#ef4444';
+  document.getElementById('audit-scores').innerHTML=`<div class="score-card"><div class="score-num" style="color:${sc(d.seo_score)}">${d.seo_score}</div><div class="score-label">SEO 評分 /100</div></div><div class="score-card"><div class="score-num" style="color:${sc(d.geo_score)}">${d.geo_score}</div><div class="score-label">GEO 就緒度 /100</div></div><div class="score-card"><div class="score-num" style="color:#ef4444">${d.issues_count}</div><div class="score-label">發現問題數</div></div><div class="score-card"><div class="score-num" style="font-size:13px;color:#a855f7;padding-top:4px">${d.opportunity}</div><div class="score-label">優化機會</div></div>`;
+  const kwChips=(d.keywords||[]).map((k,i)=>`<span class="chip ${['cp','cg','cb','cp','cg','cb'][i%6]}">${k}</span>`).join('');
+  const urlDisp=url?url.replace(/https?:\/\/[^\/]+/,''):(d.url_old||'/products/product');
+  const serpHost=url?url.replace(/https?:\/\//,'').split('/')[0]:'yourshop.hk';
+  allAuditText=`SEO:${d.seo_score} GEO:${d.geo_score}\nURL新:/products/${d.url_new}\nTitle:${d.meta_title_new}\nDesc:${d.meta_desc_new}\nH1:${d.h1_new}\n首段:${d.intro_new}\n功效:\n${(d.features_new||'').replace(/\\n/g,'\n')}\nQ:${d.geo_q1}\nA:${d.geo_a1}\nQ:${d.geo_q2}\nA:${d.geo_a2}\nQ:${d.geo_q3}\nA:${d.geo_a3}\n關鍵詞:${(d.keywords||[]).join('、')}`;
+  window._mt=d.meta_title_new;window._md=d.meta_desc_new;
+  document.getElementById('audit-sections').innerHTML=`
+    ${sec('🔑 AI 建議目標關鍵詞','green',`<div style="font-size:12px;color:#9090b0;margin-bottom:8px">建議優先針對以下關鍵詞優化：</div><div>${kwChips}</div>`)}
+    ${sec('🔗 URL 結構優化','red',`<div class="url-box"><div style="font-size:11px;color:#ef4444;margin-bottom:4px;font-weight:500">現有 URL</div><div class="url-old">${esc(urlDisp)}</div><div style="font-size:11px;color:#10b981;margin-top:7px;margin-bottom:3px;font-weight:500">建議 URL</div><div class="url-new">/products/${esc(d.url_new||'')}</div></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px">${(d.url_reasons||[]).map(r=>`<div style="background:#0d0d1a;border-radius:6px;padding:9px;font-size:12px"><div style="color:#a855f7;margin-bottom:2px">✦</div><div style="color:#9090b0">${esc(r)}</div></div>`).join('')}</div>`)}
+    ${sec('🖥 搜尋結果標題 & 描述','red',`${ba(d.meta_title_old,d.meta_title_new,'Meta Title')}${ba(d.meta_desc_old,d.meta_desc_new,'Meta Description')}<div style="font-size:12px;font-weight:500;color:#22d3ee;margin-bottom:7px">👁 Google SERP 預覽</div><div class="serp-preview"><div class="serp-url">${serpHost}/products/${esc(d.url_new||'')}</div><div class="serp-title">${esc(d.meta_title_new||'')}</div><div class="serp-desc">${esc(d.meta_desc_new||'')}</div></div><div style="display:flex;justify-content:flex-end"><button class="copy-btn" onclick="cpMeta()">複製 Meta HTML</button></div>`)}
+    ${sec('✍️ H1 產品主標題改寫','red',`${ba(d.h1_old,d.h1_new,'H1')}<div class="reason-box"><strong>改寫理由：</strong>${esc(d.h1_reason||'')}</div>`)}
+    ${sec('📝 首段產品描述改寫','red',`<div style="font-size:12px;color:#9090b0;margin-bottom:8px">修改前</div><div class="ba-box ba-before" style="margin-bottom:10px"><div class="ba-text">${esc(d.intro_old||'（未偵測）')}</div></div>${renderIntroVisual(d.intro_new)}<div class="reason-box" style="margin-top:8px"><strong>改寫理由：</strong>${esc(d.intro_reason||'')}</div>`)}
+    ${sec('✦ 功效重點列表改寫','green',`<div style="font-size:12px;color:#9090b0;margin-bottom:8px">修改前</div><div class="ba-box ba-before" style="margin-bottom:10px"><div class="ba-text">${esc(d.features_old||'（未偵測）')}</div></div>${renderFeaturesVisual(d.features_new)}<div class="reason-box" style="margin-top:8px"><strong>改寫理由：</strong>${esc(d.features_reason||'')}</div>`)}
+    ${sec('🤖 GEO 問答區塊','red',`<div style="font-size:12px;color:#9090b0;margin-bottom:9px">加入以下問答提升 ChatGPT、Perplexity 引用率：</div>${renderGeoQA(d)}<div class="reason-box" style="margin-top:9px"><strong>為什麼重要：</strong>AI 搜尋引擎優先引用含問答結構的頁面，GEO 可見度預計提升 25–40%。</div>`)}
+    ${d.kw_placement?sec('📍 關鍵詞植入位置診斷','red',renderKwPlacement(d)):''}
+    ${d.img_alt_suggestions?sec('🖼 圖片 Alt 文字建議','green',renderImgAlts(d.img_alt_suggestions)):''}`;
+}
+
+function cpMeta(){navigator.clipboard.writeText(`<title>${window._mt||''}</title>\n<meta name="description" content="${window._md||''}">`).catch(()=>{});event.target.textContent='已複製 ✓';event.target.style.color='#10b981';setTimeout(()=>{event.target.textContent='複製 Meta HTML';event.target.style.color='';},2000);}
+function copyAllAudit(){navigator.clipboard.writeText(allAuditText).catch(()=>{});const b=document.getElementById('copy-all-btn');b.textContent='已複製 ✓';b.style.background='#059669';setTimeout(()=>{b.textContent='複製全部建議';b.style.background='';},2500);}
+
+renderKwTable();renderChips();renderGeoChart();
+</script>
+</body>
+</html>
